@@ -1,41 +1,38 @@
 package persistencia;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import beans.Pessoa;
 
-public class PessoaDAO implements Serializable {
+public class PessoaDAO {
 
-	private static final long serialVersionUID = 1L;
 	
-	public static void inserir(Pessoa pessoa) {
+	/*public static void inserir(Pessoa pessoa) {
 		
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
 		sessao.save(pessoa);
 		t.commit();
 		sessao.close();
-	}
-	public static void alterar(Pessoa pessoa) {
+	}*/
+	
+	public void salvar(Pessoa pessoa) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
-		sessao.update(pessoa);
+		sessao.save(pessoa);
 		t.commit();
 		sessao.close();
 	}
-	public static void excluir(Pessoa pessoa) {
+	
+	/*public static void excluir(Pessoa pessoa) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
 		sessao.delete(pessoa);
 		t.commit();
 		sessao.close();
-	}
-	public static List<Pessoa> listagem(String filtro) {
+	}*/
+	/*public static List<Pessoa> listagem(String filtro) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Query consulta;
 		if (filtro.trim().length() == 0) {
@@ -49,6 +46,6 @@ public class PessoaDAO implements Serializable {
 		List lista = consulta.list();
 		sessao.close();
 		return lista;
-	}
+	}*/
 
 }
