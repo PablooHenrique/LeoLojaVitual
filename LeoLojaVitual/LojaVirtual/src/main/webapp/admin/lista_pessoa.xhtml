@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+<h:head>
+	<title>Lista de Pessoas</title>
+</h:head>
+<h:body>
+	<p:commandButton value="Inserir" oncomplete="PF('dlg_cadastro_pessoa').show()" style="margin-bottom: 5px"/>
+	<h:form id="form">
+		<p:dataTable id="tbl" rows="10" style="margin-bottom:20px">
+			<p:column headerText= "ID" width="5%">
+				<h:outputText value="#{pessoaCtrl.pessoa.id}" />
+			</p:column>
+			
+			<p:column headerText="Nome" width="25%">
+				<h:outputText value="#{pessoaCtrl.pessoa.nome}"/> 
+			</p:column>
+			
+			<p:column headerText= "CPF" width="15%" >
+				<h:outputText value="#{pessoaCtrl.pessoa.cpf}" />
+			</p:column>
+			
+			<p:column headerText= "RG" width="10%">
+				<h:outputText value="#{pessoaCtrl.pessoa.rg}" />
+			</p:column>
+			
+			<p:column headerText= "Data Nascimento" width="10%">
+				<h:outputText value="#{pessoaCtrl.pessoa.dataNascimento}" />
+			</p:column>
+			
+			<p:column headerText= "E-mail" width="20%">
+				<h:outputText value="#{pessoaCtrl.pessoa.email}" />
+			</p:column>
+			
+			<p:column headerText="Detalhes / Excluir" width="15%">
+							
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	
+	<p:dialog header="Cadastro de Pessoa" widgetVar="dlg_cadastro_pessoa" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="80%">
+					
+			<p:panel header="Dados Pessoais">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Nome: " />
+					<p:inputText value="#{pessoaCtrl.pessoa.nome}" maxlength="20"/>
+					
+					<h:outputLabel value="CPF: " />
+					<p:inputMask value="#{pessoaCtrl.pessoa.cpf}" mask="999.999.999-99"/>
+					
+					<h:outputLabel value="RG: "/>
+					<p:inputText value="#{pessoaCtrl.pessoa.rg}" maxlength="10"/>
+					
+					<h:outputLabel value="Data Nascimento: "/>
+					<p:calendar value="#{pessoaCtrl.pessoa.dataNascimento}"/>
+					
+					<h:outputLabel value="E-mail: " />
+					<p:inputText value="#{pessoaCtrl.pessoa.email}" maxlength="15"/>
+					
+					<h:outputLabel value="Senha:" />
+					<p:password 
+					value="#{pessoaCtrl.pessoa.senha}"
+					maxlength="8" />
+				</h:panelGrid>
+			</p:panel>					
+				
+			<p:panel header="Endereço">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Cidade: " />
+					<p:inputText value="" maxlength="10" />
+					
+					<h:outputLabel value="UF: " />
+					<p:inputText value="" maxlength="2" />
+					
+					<h:outputLabel value="CEP: " />
+					<p:inputMask mask="99.999-999"/>
+					
+					<h:outputLabel value="Bairro: " />
+					<p:inputText value="" maxlength="10" />
+					
+					<h:outputLabel value="rua: " />
+					<p:inputText value="" maxlength="10" />
+				</h:panelGrid>
+			</p:panel>
+			
+			<div style="text-align: right; margin-top: 5px">
+				<p:commandButton value="Salvar"
+						action="#{pessoaCtrl.inserir}" />
+				<p:commandButton value="cancelar " />
+			</div>
+	</p:dialog>
+</h:body>
+
+</html>
