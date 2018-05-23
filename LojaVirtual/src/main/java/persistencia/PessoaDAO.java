@@ -1,5 +1,8 @@
 package persistencia;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -25,6 +28,14 @@ public class PessoaDAO {
 		sessao.close();
 	}
 	
+	public void alterar(Pessoa pessoa) {
+		Session sessao = HibernateUtil.getSessionFactory().openSession();
+		Transaction t = sessao.beginTransaction();
+		sessao.update(pessoa);
+		t.commit();
+		sessao.close();
+	}
+	
 	/*public static void excluir(Pessoa pessoa) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
@@ -32,6 +43,7 @@ public class PessoaDAO {
 		t.commit();
 		sessao.close();
 	}*/
+	
 	/*public static List<Pessoa> listagem(String filtro) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Query consulta;
@@ -47,5 +59,17 @@ public class PessoaDAO {
 		sessao.close();
 		return lista;
 	}*/
+	
+	public List<Pessoa> list() {
+		List<Pessoa> result = null;
+		try {
+			Session sessao = HibernateUtil.getSessionFactory().openSession();
+			Query query = sessao.createQuery("FROM Pessoa");
+			result = query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

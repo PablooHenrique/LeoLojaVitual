@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.SelectEvent;
 
+import beans.Endereco;
 import beans.Pessoa;
 import beans.Telefone;
 import persistencia.PessoaDAO;
@@ -18,30 +21,31 @@ import persistencia.PessoaDAO;
 @SessionScoped
 public class PessoaCtrl implements Serializable {
 
-	private static final long serialVersionUID = -6898332734920770502L;
+	private static final long serialVersionUID = 1L;
 	private Pessoa pessoa;
 	private String filtro = "";
-	private PessoaDAO pessoaDAO;
+	private PessoaDAO pessoaDAO = new PessoaDAO();
+	private Endereco endereco;
 	public List<Pessoa> lista = new ArrayList<>();
 
-	public String inserir() {
-		getPessoaDAO().salvar(pessoa);
-		getPessoa();
-		return "pessoa";
+	@PostConstruct
+	public void init(){
+		this.pessoa = new Pessoa();
+		this.endereco = new Endereco();
+		this.pessoaDAO = new PessoaDAO();
+		this.lista = pessoaDAO.list();
 	}
 
-	public String actionGravar() {
+	public String inserir() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		// if (pessoa.getId() == 0) {
-		// PessoaDAO.inserir(pessoa);
-		// context.addMessage(null, new FacesMessage("Sucesso", "Inserido com
-		// sucesso"));
-		// } else {
-		// PessoaDAO.alterar(pessoa);
-		// context.addMessage(null, new FacesMessage("Sucesso", "Alterado com
-		// Sucesso"));
-		// }
-		return "lista_pessoa";
+		if(pessoa.getId() == null) {
+			pessoaDAO.salvar(pessoa);
+		 context.addMessage(null, new FacesMessage("Sucesso", "Inserido com sucesso"));
+	 }else{
+		 pessoaDAO.alterar(pessoa);
+		context.addMessage(null, new FacesMessage("Sucesso", "Alterado com Sucesso"));
+		 }
+		return"pessoa";
 	}
 
 	public String actionInserir() {
@@ -50,10 +54,10 @@ public class PessoaCtrl implements Serializable {
 
 	}
 
-	/*public String actionExcluir() {
-		PessoaDAO.excluir(pessoa);
-		return "lista_pessoa";
-	}*/
+	/*
+	 * public String actionExcluir() { PessoaDAO.excluir(pessoa); return
+	 * "lista_pessoa"; }
+	 */
 
 	public String actionInserirFone() {
 		// Telefone fone = new Telefone();
@@ -76,13 +80,10 @@ public class PessoaCtrl implements Serializable {
 		// FacesContext.getCurrentInstance().addMessage(null, msg);
 
 	}
-	
+
 	// Geters and seters
 
 	public Pessoa getPessoa() {
-		if(pessoa == null) {
-			setPessoa(new Pessoa());
-		}
 		return pessoa;
 	}
 
@@ -99,22 +100,29 @@ public class PessoaCtrl implements Serializable {
 	}
 
 	public PessoaDAO getPessoaDAO() {
-		if(pessoaDAO == null) {
-			setPessoaDAO(new PessoaDAO());
-		}
 		return pessoaDAO;
 	}
 
 	public void setPessoaDAO(PessoaDAO pessoaDAO) {
 		this.pessoaDAO = pessoaDAO;
 	}
-
+	
 	public List<Pessoa> getLista() {
+		this.lista = pessoaDAO.list();
 		return lista;
 	}
 
 	public void setLista(List<Pessoa> lista) {
 		this.lista = lista;
 	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	
 
 }
