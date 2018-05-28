@@ -1,51 +1,44 @@
 package persistencia;
 
+import beans.Produto;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
 import java.io.Serializable;
 import java.util.List;
-
-import org.hibernate.*;
-
-import beans.Produto;
 
 public class ProdutoDAO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static void inserir(Produto produto) {
-		
+	public void inserir (Produto produto) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
-		sessao.save(produto);
+		sessao.merge(produto);
 		t.commit();
 		sessao.close();
 	}
-	public static void alterar(Produto produto) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Transaction t = sessao.beginTransaction();
-		sessao.update(produto);
-		t.commit();
-		sessao.close();
+
+	public List<Produto> listar(){
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		List<Produto> produtos = session.createQuery("select p from Produto p").list();
+		session.close();
+		return produtos;
 	}
-	public static void excluir(Produto produto) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Transaction t = sessao.beginTransaction();
-		sessao.delete(produto);
-		t.commit();
-		sessao.close();
-	}
-	public static List<Produto> listagem(String filtro) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Query consulta;
-		if (filtro.trim().length() == 0) {
-			consulta = sessao.createQuery("from Produto order by pro_nome");
-			
+
+	public boolean excluir(Produto produto) {
+		try {
+			SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+			Session session = sessionFactory.openSession();
+			Transaction transaction = session.beginTransaction();
+			session.delete(produto);
+			transaction.commit();
+			return true;
+		} catch (Exception e) {
+			System.out.println("Erro: " + e.getMessage()) ;
 		}
-		else {
-			consulta = sessao.createQuery("from Produto where pro_nome like :parametro order by pro_nome");
-			consulta.setString("parametro", "%" + filtro + "%");	
-		}
-		List lista = consulta.list();
-		sessao.close();
-		return lista;
+		return false;
 	}
 }

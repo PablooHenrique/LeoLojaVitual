@@ -2,22 +2,14 @@ package beans;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "pessoas")
 public class Pessoa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "nome", length = 60, nullable = true)
 	private String nome;
@@ -31,29 +23,26 @@ public class Pessoa {
 	@Column(name = "data_nascimento", length = 20)
 	private Date dataNascimento;
 	
-	@Column(name = "email", length = 45)
+	@Column(name = "email", length = 20)
 	private String email;
 	
 	@Column(name = "senha", length = 45)
 	private String senha;
 	
-	@OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+	@Embedded
 	private Endereco endereco;
-	
-	/*@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Telefone> telefones;
-	*/
+
 	public Pessoa() {
-		super();
+		if (this.getEndereco() == null) {
+			setEndereco(new Endereco());
+		}
 	}
 
-	
-	//getter e setter
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -106,14 +95,10 @@ public class Pessoa {
 	}
 
 	public Endereco getEndereco() {
-		if(endereco == null) {
-			setEndereco(new Endereco());
-		}
 		return endereco;
 	}
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-	
 }

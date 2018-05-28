@@ -1,75 +1,53 @@
 package persistencia;
 
-import java.util.List;
-
-import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import beans.Pessoa;
 
+import java.util.List;
+
 public class PessoaDAO {
 
-	
-	/*public static void inserir(Pessoa pessoa) {
-		
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Transaction t = sessao.beginTransaction();
-		sessao.save(pessoa);
-		t.commit();
-		sessao.close();
-	}*/
-	
+	public static void main(String[] args){
+		try {
+			PessoaDAO pessoaDAO = new PessoaDAO();
+			List<Pessoa> pessoas = pessoaDAO.listar();
+			System.out.println(pessoas.size());
+			System.out.println("Sucesso");
+		} catch (Exception e) {
+			System.out.println();
+		}
+	}
+
 	public void salvar(Pessoa pessoa) {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		Transaction t = sessao.beginTransaction();
-		sessao.save(pessoa);
+		sessao.merge(pessoa);
 		t.commit();
 		sessao.close();
-	}
-	
-	public void alterar(Pessoa pessoa) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Transaction t = sessao.beginTransaction();
-		sessao.update(pessoa);
-		t.commit();
-		sessao.close();
-	}
-	
-	/*public static void excluir(Pessoa pessoa) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Transaction t = sessao.beginTransaction();
-		sessao.delete(pessoa);
-		t.commit();
-		sessao.close();
-	}*/
-	
-	/*public static List<Pessoa> listagem(String filtro) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		Query consulta;
-		if (filtro.trim().length() == 0) {
-			consulta = sessao.createQuery("from Pessoa order by pes_nome");
-			
-		}
-		else {
-			consulta = sessao.createQuery("from Pessoa where pes_nome like :parametro order by pes_nome");
-			consulta.setString("parametro", "%" + filtro + "%");	
-		}
-		List lista = consulta.list();
-		sessao.close();
-		return lista;
-	}*/
-	
-	public List<Pessoa> list() {
-		List<Pessoa> result = null;
-		try {
-			Session sessao = HibernateUtil.getSessionFactory().openSession();
-			Query query = sessao.createQuery("FROM Pessoa");
-			result = query.list();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 
+	public List<Pessoa> listar(){
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		List<Pessoa> pessoas = session.createQuery("select p from Pessoa p").list();
+		session.close();
+		return pessoas;
+	}
+
+	public boolean excluir(Pessoa pessoa) {
+		try {
+			SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+			Session session = sessionFactory.openSession();
+			Transaction transaction = session.beginTransaction();
+			session.delete(pessoa);
+			transaction.commit();
+			return true;
+		} catch (Exception e) {
+			System.out.println("Erro: " + e.getMessage()) ;
+		}
+		return false;
+	}
 }

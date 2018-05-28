@@ -14,6 +14,7 @@ public class HibernateUtil {
 		try {
 				Configuration cfg = new Configuration();
 				cfg.configure("hibernate.cfg.xml");
+				
 				StandardServiceRegistryBuilder registradorServico = new StandardServiceRegistryBuilder();
 				registradorServico.applySettings(cfg.getProperties());
 				StandardServiceRegistry servico = registradorServico.build();
